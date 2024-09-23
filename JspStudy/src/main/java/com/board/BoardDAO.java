@@ -18,6 +18,7 @@ public class BoardDAO {
 	
 	public void connectToDatabase() {
 		try {
+			//JDBC 드라이버를 이용해 데이터베이스에 연결
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/JspTest","root","dlsvlslxM12!");
 			System.out.println("연결 성공!");
 		} catch (SQLException e) {
