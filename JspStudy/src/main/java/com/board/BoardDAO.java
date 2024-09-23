@@ -1,8 +1,10 @@
 package com.board;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -12,6 +14,15 @@ public class BoardDAO {
 	
 	public BoardDAO(Connection conn) {
 		this.conn = conn;
+	}
+	
+	public void connectToDatabase() {
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/JspTest","root","dlsvlslxM12!");
+			System.out.println("연결 성공!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//num의 최대값 구하기
@@ -225,9 +236,44 @@ public class BoardDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 			
+			pstmt.setString(1, dto.getName());
+			pstmt.setString(2, dto.getPwd());
+			pstmt.setString(3, dto.getEmail());
+			pstmt.setString(4, dto.getSubject());
+			pstmt.setString(5, dto.getContent());
+			pstmt.setInt(6, dto.getNum());
+			
+			result = pstmt.executeUpdate();
+			
+			pstmt.close();
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println(e.toString());
 		}
+		return result;
+	}
+	
+	public int deleteData(int num) {
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "delete board where num=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, num);
+			
+			result = pstmt.executeUpdate();
+			
+			pstmt.close();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return result;
 	}
 }
 
